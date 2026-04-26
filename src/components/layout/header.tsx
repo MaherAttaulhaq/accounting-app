@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { LayoutDashboard, Receipt, BarChart3, Wallet, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { UserMenu } from './user-menu';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -13,7 +14,14 @@ const navItems = [
   { href: '/dashboard/reports', label: 'Reports', icon: BarChart3 },
 ];
 
-export function Header() {
+interface HeaderProps {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+  } | null;
+}
+
+export function Header({ user }: HeaderProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -50,12 +58,15 @@ export function Header() {
           })}
         </nav>
 
-        <button
-          className="md:hidden p-2 rounded-lg hover:bg-slate-100"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          {user && <UserMenu user={user} />}
+          <button
+            className="md:hidden p-2 rounded-lg hover:bg-slate-100"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
