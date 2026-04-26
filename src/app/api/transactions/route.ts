@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'better-auth/server';
+import { getSession } from '@/lib/auth';
 import { getTransactions, createTransaction, updateTransaction, deleteTransaction } from '@/lib/api/transactions';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await getSession();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       category: searchParams.get('category') || undefined,
     };
 
-    const data = await getTransactions(filters);
+    const data = await getTransactions(session.user.id, filters);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching transactions:', error);
@@ -27,13 +27,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await getSession();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
-    const transaction = await createTransaction(body);
+    const transaction = await createTransaction(session.user.id, body);
     return NextResponse.json(transaction, { status: 201 });
   } catch (error) {
     console.error('Error creating transaction:', error);
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await getSession();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -56,7 +56,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const transaction = await updateTransaction(id, body);
+    const transaction = await updateTransaction(session.user.id, id, body);
     return NextResponse.json(transaction);
   } catch (error) {
     console.error('Error updating transaction:', error);
@@ -66,7 +66,7 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await getSession();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -78,7 +78,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Transaction ID required' }, { status: 400 });
     }
 
-    await deleteTransaction(id);
+    await deleteTransaction(session.user.id, id);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting transaction:', error);

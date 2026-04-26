@@ -1,7 +1,46 @@
-import { createAuthClient } from 'better-auth/react';
+'use client';
 
-export const authClient = createAuthClient({
-  baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
-});
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
-export const { useSession, signIn, signOut, signUp } = authClient;
+export async function login(email: string, password: string) {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.error || 'Login failed');
+  }
+  
+  return res.json();
+}
+
+export async function signup(name: string, email: string, password: string) {
+  const res = await fetch(`${API_URL}/api/auth/signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password }),
+  });
+  
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.error || 'Signup failed');
+  }
+  
+  return res.json();
+}
+
+export async function logout() {
+  const res = await fetch(`${API_URL}/api/auth/logout`, {
+    method: 'POST',
+  });
+  
+  return res.json();
+}
+
+export async function getSession() {
+  const res = await fetch(`${API_URL}/api/auth/session`);
+  return res.json();
+}
