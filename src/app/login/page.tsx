@@ -21,16 +21,21 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    try {
+      const formData = new FormData(e.currentTarget);
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
 
-    const result = await login(email, password);
+      const result = await login(email, password);
 
-    if (result.success) {
-      router.push('/dashboard');
-    } else {
-      setError(result.error || 'Login failed');
+      if (result.success) {
+        router.push('/dashboard');
+      } else {
+        setError(result.error || 'Login failed');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An unexpected error occurred. Please try again.');
     }
 
     setLoading(false);

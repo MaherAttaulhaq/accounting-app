@@ -25,19 +25,24 @@ export async function verifyToken(token: string): Promise<{ userId: string } | n
 }
 
 export async function getSession() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('auth-token')?.value;
-  
-  if (!token) return null;
-  
-  const payload = await verifyToken(token);
-  if (!payload) return null;
-  
-  const [user] = await db.select().from(users).where(eq(users.id, payload.userId));
-  
-  if (!user) return null;
-  
-  return { user: { id: user.id, name: user.name, email: user.email, image: user.image } };
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('auth-token')?.value;
+    
+    if (!token) return null;
+    
+    const payload = await verifyToken(token);
+    if (!payload) return null;
+    
+    const [user] = await db.select().from(users).where(eq(users.id, payload.userId));
+    
+    if (!user) return null;
+    
+    return { user: { id: user.id, name: user.name, email: user.email, image: user.image } };
+  } catch (error) {
+    console.error('getSession error:', error);
+    return null;
+  }
 }
 
 export async function hashPassword(password: string): Promise<string> {
