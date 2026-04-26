@@ -91,7 +91,7 @@ export default function TransactionsPage() {
         className="flex items-center justify-between"
       >
         <div>
-          <h1 className="text-3xl font-bold">Transactions</h1>
+          <h1 className="text-3xl font-bold text-foreground">Transactions</h1>
           <p className="text-muted-foreground">Manage your income and expenses</p>
         </div>
         <Button onClick={() => setFormOpen(true)} className="gap-2 bg-blue-600 hover:bg-blue-700">

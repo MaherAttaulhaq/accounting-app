@@ -26,7 +26,7 @@ export function Sidebar() {
       initial={{ x: -20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="w-64 bg-white border-r h-screen fixed left-0 top-16 z-40 flex flex-col"
+      className="w-64 bg-card border-r h-screen fixed left-0 top-16 z-40 flex flex-col"
     >
       <nav className="flex-1 p-4 space-y-1">
         {navItems.map((item) => {
@@ -39,7 +39,7 @@ export function Sidebar() {
                 'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200',
                 isActive
                   ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/20'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
               )}
             >
               <item.icon className="w-5 h-5" />
@@ -49,10 +49,10 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-slate-200/50">
+      <div className="p-4 border-t border-border">
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 w-full transition-all duration-200"
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive w-full transition-all duration-200"
         >
           <LogOut className="w-5 h-5" />
           <span>Sign Out</span>

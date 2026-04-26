@@ -37,11 +37,11 @@ export function UserMenu({ user }: UserMenuProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="flex items-center gap-2 px-3 py-2 h-auto">
           <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-blue-100 text-blue-600 text-sm font-semibold">
+            <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
               {initials}
             </AvatarFallback>
           </Avatar>
-          <span className="hidden md:inline-block text-sm font-medium text-slate-700">
+          <span className="hidden md:inline-block text-sm font-medium text-foreground">
             {user.name || user.email}
           </span>
         </Button>
@@ -63,7 +63,7 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleSignOut}
-          className="text-red-600 cursor-pointer focus:text-red-600 focus:bg-red-50"
+          className="text-destructive cursor-pointer focus:text-destructive focus:bg-destructive/10"
         >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Sign out</span>

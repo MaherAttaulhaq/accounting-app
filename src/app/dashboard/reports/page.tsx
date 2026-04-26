@@ -110,7 +110,7 @@ export default function ReportsPage() {
         className="flex items-center justify-between"
       >
         <div>
-          <h1 className="text-3xl font-bold">Reports</h1>
+          <h1 className="text-3xl font-bold text-foreground">Reports</h1>
           <p className="text-muted-foreground">Analyze your financial data</p>
         </div>
         <Button variant="outline" onClick={exportToCSV} className="gap-2">
