@@ -23,10 +23,10 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
-      className="bg-white rounded-lg border shadow-sm"
+      className="bg-card rounded-lg border shadow-sm"
     >
       <div className="p-6 border-b">
-        <h2 className="text-lg font-semibold">Recent Transactions</h2>
+        <h2 className="text-lg font-semibold text-foreground">Recent Transactions</h2>
       </div>
       <Table>
         <TableHeader>
@@ -47,19 +47,19 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
           ) : (
             transactions.slice(0, 5).map((transaction) => (
               <TableRow key={transaction.id}>
-                <TableCell>{formatDate(transaction.date)}</TableCell>
+                <TableCell className="text-foreground">{formatDate(transaction.date)}</TableCell>
                 <TableCell>
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       transaction.type === 'income'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                     }`}
                   >
                     {transaction.type}
                   </span>
                 </TableCell>
-                <TableCell>{transaction.category}</TableCell>
+                <TableCell className="text-foreground">{transaction.category}</TableCell>
                 <TableCell className={transaction.type === 'income' ? 'text-income font-medium' : 'text-expense font-medium'}>
                   {transaction.type === 'income' ? '+' : '-'}${transaction.amount.toLocaleString()}
                 </TableCell>
