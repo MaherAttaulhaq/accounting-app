@@ -10,19 +10,33 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
-  const session = await getSession();
+  let session;
+  try {
+    session = await getSession();
+  } catch (error) {
+    console.error('Session error:', error);
+    session = null;
+  }
 
   if (!session) {
     redirect('/login');
   }
 
-  const userTransactions = await db
-    .select()
-    .from(transactions)
-    .where(eq(transactions.userId, session.user.id))
-    .orderBy(desc(transactions.date))
-    .limit(10);
+  let userTransactions: typeof transactions.$inferSelect[] = [];
+  try {
+    userTransactions = await db
+      .select()
+      .from(transactions)
+      .where(eq(transactions.userId, session.user.id))
+      .orderBy(desc(transactions.date))
+      .limit(10);
+  } catch (error) {
+    console.error('Error fetching transactions:', error);
+    userTransactions = [];
+  }
 
   const formattedTransactions = userTransactions.map(t => ({
     ...t,
