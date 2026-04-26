@@ -1,4 +1,4 @@
-import { auth } from '@/lib/better-auth';
+import { auth } from "@/lib/auth"; // path to your server-side auth config
+import { toNextJsHandler } from "better-auth/next-js";
 
-export const GET = auth.handler;
-export const POST = auth.handler;
+export const { GET, POST } = toNextJsHandler(auth);

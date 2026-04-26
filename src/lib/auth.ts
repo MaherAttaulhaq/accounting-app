@@ -25,3 +25,5 @@ export async function getSession() {
     return null;
   }
 }
+
+export { auth };
