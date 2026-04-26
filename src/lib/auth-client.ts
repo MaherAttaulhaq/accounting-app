@@ -1,6 +1,11 @@
 'use client';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+import { createAuthClient } from "better-auth/react"
+
+export const authClient = createAuthClient({
+    baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL 
+})
 
 export async function login(email: string, password: string) {
   const res = await fetch(`${API_URL}/api/auth/login`, {

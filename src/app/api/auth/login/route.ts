@@ -29,14 +29,18 @@ export async function POST(request: NextRequest) {
 
     const token = await createToken(user.id);
 
-    const response = NextResponse.json({ success: true, user: { id: user.id, name: user.name, email: user.email } });
-    response.cookies.set('auth-token', token, {
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'lax' as const,
       maxAge: 60 * 60 * 24 * 7,
       path: '/',
-    });
+    };
+
+    const response = NextResponse.json({ success: true, user: { id: user.id, name: user.name, email: user.email } });
+    
+    // Set cookie without domain for Vercel compatibility
+    response.cookies.set('auth-token', token, cookieOptions);
 
     return response;
   } catch (error) {
