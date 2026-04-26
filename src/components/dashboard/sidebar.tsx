@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { authClient } from '@/lib/auth-client';
+import { logout } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import { LayoutDashboard, Receipt, BarChart3, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -17,7 +17,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const handleSignOut = async () => {
-    await authClient.signOut();
+    await logout();
     window.location.href = '/login';
   };
 
