@@ -1,19 +1,7 @@
 import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-export default async function Home() {
-  try {
-    const session = await getSession();
-    
-    if (session) {
-      redirect('/dashboard');
-    } else {
-      redirect('/login');
-    }
-  } catch (error) {
-    console.error('Session error:', error);
-    redirect('/login');
-  }
+export default function Home() {
+  redirect('/dashboard');
 }
