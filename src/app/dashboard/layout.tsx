@@ -4,8 +4,16 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Sidebar } from '@/components/dashboard/sidebar';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await getSession();
+  let session;
+  try {
+    session = await getSession();
+  } catch (error) {
+    console.error('Dashboard layout session error:', error);
+    session = null;
+  }
 
   if (!session) {
     redirect('/login');
