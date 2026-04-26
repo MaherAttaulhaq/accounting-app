@@ -107,13 +107,13 @@ export default function ReportsPage() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex items-center justify-between"
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
       >
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Reports</h1>
-          <p className="text-muted-foreground">Analyze your financial data</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Reports</h1>
+          <p className="text-muted-foreground text-sm">Analyze your financial data</p>
         </div>
-        <Button variant="outline" onClick={exportToCSV} className="gap-2">
+        <Button variant="outline" onClick={exportToCSV} className="gap-2 w-full sm:w-auto">
           <FileSpreadsheet className="w-4 h-4" />
           Export CSV
         </Button>
@@ -129,7 +129,7 @@ export default function ReportsPage() {
             <CardTitle>Filters</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <Input
                 type="date"
                 value={filters.startDate}
@@ -173,24 +173,24 @@ export default function ReportsPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
       >
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm text-muted-foreground">Total Income</div>
-            <div className="text-2xl font-bold text-income">+{formatCurrency(totalIncome)}</div>
+            <div className="text-xl sm:text-2xl font-bold text-income">+{formatCurrency(totalIncome)}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm text-muted-foreground">Total Expenses</div>
-            <div className="text-2xl font-bold text-expense">-{formatCurrency(totalExpenses)}</div>
+            <div className="text-xl sm:text-2xl font-bold text-expense">-{formatCurrency(totalExpenses)}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm text-muted-foreground">Net Balance</div>
-            <div className={`text-2xl font-bold ${totalIncome - totalExpenses >= 0 ? 'text-income' : 'text-expense'}`}>
+            <div className={`text-xl sm:text-2xl font-bold ${totalIncome - totalExpenses >= 0 ? 'text-income' : 'text-expense'}`}>
               {formatCurrency(totalIncome - totalExpenses)}
             </div>
           </CardContent>
@@ -205,7 +205,7 @@ export default function ReportsPage() {
         >
           <Card>
             <CardHeader>
-              <CardTitle>Expenses by Category</CardTitle>
+              <CardTitle className="text-lg">Expenses by Category</CardTitle>
             </CardHeader>
             <CardContent>
               <ExpensePieChart data={pieChartData} />
@@ -220,7 +220,7 @@ export default function ReportsPage() {
         >
           <Card>
             <CardHeader>
-              <CardTitle>Income vs Expenses</CardTitle>
+              <CardTitle className="text-lg">Income vs Expenses</CardTitle>
             </CardHeader>
             <CardContent>
               <IncomeExpenseBarChart data={barChartData} />

@@ -88,13 +88,13 @@ export default function TransactionsPage() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex items-center justify-between"
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
       >
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Transactions</h1>
-          <p className="text-muted-foreground">Manage your income and expenses</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Transactions</h1>
+          <p className="text-muted-foreground text-sm">Manage your income and expenses</p>
         </div>
-        <Button onClick={() => setFormOpen(true)} className="gap-2 bg-blue-600 hover:bg-blue-700">
+        <Button onClick={() => setFormOpen(true)} className="gap-2 bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
           <Plus className="w-4 h-4" />
           Add Transaction
         </Button>
@@ -113,7 +113,7 @@ export default function TransactionsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <Select value={filters.type} onValueChange={(v) => setFilters({ ...filters, type: v })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Type" />
@@ -158,18 +158,18 @@ export default function TransactionsPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
-        className="grid grid-cols-2 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
       >
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm text-muted-foreground">Total Income</div>
-            <div className="text-2xl font-bold text-income">+{formatCurrency(totalIncome)}</div>
+            <div className="text-xl sm:text-2xl font-bold text-income">+{formatCurrency(totalIncome)}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm text-muted-foreground">Total Expenses</div>
-            <div className="text-2xl font-bold text-expense">-{formatCurrency(totalExpenses)}</div>
+            <div className="text-xl sm:text-2xl font-bold text-expense">-{formatCurrency(totalExpenses)}</div>
           </CardContent>
         </Card>
       </motion.div>
@@ -180,7 +180,7 @@ export default function TransactionsPage() {
         transition={{ duration: 0.3, delay: 0.3 }}
       >
         <Card>
-          <CardContent className="p-0">
+          <CardContent className="p-0 overflow-x-auto">
             <TransactionTable transactions={transactions} onEdit={handleEdit} onDelete={setDeleteId} />
           </CardContent>
         </Card>

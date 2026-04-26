@@ -20,23 +20,33 @@ interface HeaderProps {
     name?: string | null;
     email?: string | null;
   } | null;
+  onMenuClick?: () => void;
+  menuOpen?: boolean;
 }
 
-export function Header({ user }: HeaderProps) {
+export function Header({ user, onMenuClick, menuOpen }: HeaderProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-md border-b border-border z-50">
       <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
-            <Wallet className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            AccountFlow
-          </span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            className="md:hidden p-2 -ml-2 rounded-lg hover:bg-accent"
+            onClick={onMenuClick}
+          >
+            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+              <Wallet className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+              AccountFlow
+            </span>
+          </Link>
+        </div>
 
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => {
@@ -59,7 +69,7 @@ export function Header({ user }: HeaderProps) {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 md:gap-2">
           <ThemeToggle />
           {user && <UserMenu user={user} />}
           <button

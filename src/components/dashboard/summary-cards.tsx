@@ -39,7 +39,7 @@ export function SummaryCards({ totalIncome, totalExpenses, loading }: SummaryCar
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         {[1, 2, 3].map((i) => (
           <Card key={i} className="animate-pulse">
             <CardHeader className="pb-2">
@@ -55,7 +55,7 @@ export function SummaryCards({ totalIncome, totalExpenses, loading }: SummaryCar
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
       {cards.map((card, index) => (
         <motion.div
           key={card.title}
@@ -73,7 +73,7 @@ export function SummaryCards({ totalIncome, totalExpenses, loading }: SummaryCar
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-xl sm:text-2xl font-bold">
                 ${card.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </div>
             </CardContent>
