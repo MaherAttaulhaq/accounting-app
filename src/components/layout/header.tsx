@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { LayoutDashboard, Receipt, BarChart3, Wallet, Menu, X } from 'lucide-react';
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserMenu } from './user-menu';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
@@ -26,7 +25,6 @@ interface HeaderProps {
 
 export function Header({ user, onMenuClick, menuOpen }: HeaderProps) {
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-md border-b border-border z-50">
@@ -72,45 +70,8 @@ export function Header({ user, onMenuClick, menuOpen }: HeaderProps) {
         <div className="flex items-center gap-1 md:gap-2">
           <ThemeToggle />
           {user && <UserMenu user={user} />}
-          <button
-            className="md:hidden p-2 rounded-lg hover:bg-accent"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
         </div>
       </div>
-
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="md:hidden absolute top-16 left-0 right-0 bg-background border-b shadow-lg p-4"
-          >
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-primary/10 text-primary'
-                      : 'text-muted-foreground hover:bg-accent'
-                  )}
-                >
-                  <item.icon className="w-5 h-5" />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
   );
 }
