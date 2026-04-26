@@ -1,56 +1,67 @@
-import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { transactions } from '@/lib/drizzle/schema';
-import { eq, desc } from 'drizzle-orm';
-import { SummaryCards } from '@/components/dashboard/summary-cards';
-import { RecentTransactions } from '@/components/dashboard/recent-transactions';
-import { Button } from '@/components/ui/button';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SummaryCards } from '@/components/dashboard/summary-cards';
+import { RecentTransactions } from '@/components/dashboard/recent-transactions';
+import { getSession } from '@/lib/auth-client';
 
-export const dynamic = 'force-dynamic';
+export default function DashboardPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [user, setUser] = useState<any>(null);
 
-export default async function DashboardPage() {
-  let session;
-  try {
-    session = await getSession();
-  } catch (error) {
-    console.error('Session error:', error);
-    session = null;
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const session = await getSession();
+        if (!session.authenticated) {
+          router.push('/login');
+          return;
+        }
+        setUser(session.user);
+        
+        const res = await fetch('/api/transactions');
+        if (res.ok) {
+          const data = await res.json();
+          setTransactions(data);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        router.push('/login');
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkSession();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
-  if (!session) {
-    redirect('/login');
-  }
-
-  let userTransactions: typeof transactions.$inferSelect[] = [];
-  try {
-    userTransactions = await db
-      .select()
-      .from(transactions)
-      .where(eq(transactions.userId, session.user.id))
-      .orderBy(desc(transactions.date))
-      .limit(10);
-  } catch (error) {
-    console.error('Error fetching transactions:', error);
-    userTransactions = [];
-  }
-
-  const formattedTransactions = userTransactions.map(t => ({
+  const formattedTransactions = transactions.map((t: any) => ({
     ...t,
     amount: Number(t.amount),
-    date: t.date.toString(),
+    date: new Date(t.date).toISOString(),
   }));
 
-  const totalIncome = userTransactions
-    .filter((t) => t.type === 'income')
-    .reduce((sum, t) => sum + Number(t.amount), 0);
+  const totalIncome = transactions
+    .filter((t: any) => t.type === 'income')
+    .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
 
-  const totalExpenses = userTransactions
-    .filter((t) => t.type === 'expense')
-    .reduce((sum, t) => sum + Number(t.amount), 0);
+  const totalExpenses = transactions
+    .filter((t: any) => t.type === 'expense')
+    .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
 
   return (
     <div className="space-y-8 max-w-6xl">
