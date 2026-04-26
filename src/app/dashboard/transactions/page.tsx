@@ -83,7 +83,7 @@ export default function TransactionsPage() {
   const totalExpenses = transactions.filter((t) => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-6xl">
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -94,7 +94,7 @@ export default function TransactionsPage() {
           <h1 className="text-3xl font-bold">Transactions</h1>
           <p className="text-muted-foreground">Manage your income and expenses</p>
         </div>
-        <Button onClick={() => setFormOpen(true)} className="gap-2">
+        <Button onClick={() => setFormOpen(true)} className="gap-2 bg-blue-600 hover:bg-blue-700">
           <Plus className="w-4 h-4" />
           Add Transaction
         </Button>
