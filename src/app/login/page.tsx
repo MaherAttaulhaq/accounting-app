@@ -7,45 +7,44 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { login } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth-client';
 import { Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
 
-    try {
-      const formData = new FormData(e.currentTarget);
-      const email = formData.get('email') as string;
-      const password = formData.get('password') as string;
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
-      const result = await login(email, password);
-
-      if (result.success) {
-        router.push('/dashboard');
-      } else {
-        setError(result.error || 'Login failed');
+    await authClient.signIn.email(
+      {
+        email,
+        password,
+        callbackURL: '/dashboard',
+      },
+      {
+        onRequest: () => setLoading(true),
+        onSuccess: () => router.push('/dashboard'),
+        onError: (ctx) => {
+          alert(ctx.error.message);
+          setLoading(false);
+        },
       }
-    } catch (err) {
-      console.error('Login error:', err);
-      setError('An unexpected error occurred. Please try again.');
-    }
-
-    setLoading(false);
+    );
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(59,130,246,0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(16,185,129,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial_gradient(ellipse_at_bottom_left,_rgba(16,185,129,0.1),transparent_50%)]" />
       </div>
 
       <motion.div
@@ -63,15 +62,6 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center"
-                >
-                  {error}
-                </motion.div>
-              )}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-slate-300">Email</Label>
                 <Input

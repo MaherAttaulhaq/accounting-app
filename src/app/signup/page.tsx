@@ -7,47 +7,39 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { signup } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth-client';
 import { Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function SignupPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
 
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-    const confirmPassword = formData.get('confirmPassword') as string;
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
-    }
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      setLoading(false);
-      return;
-    }
-
-    const result = await signup(name, email, password);
-
-    if (result.success) {
-      router.push('/dashboard');
-    } else {
-      setError(result.error || 'Signup failed');
-    }
-
-    setLoading(false);
+    await authClient.signUp.email(
+      {
+        email,
+        password,
+        name,
+        callbackURL: '/dashboard',
+      },
+      {
+        onRequest: () => setLoading(true),
+        onSuccess: () => router.push('/dashboard'),
+        onError: (ctx) => {
+          alert(ctx.error.message);
+          setLoading(false);
+        },
+      }
+    );
   };
 
   return (
@@ -72,15 +64,6 @@ export default function SignupPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center"
-                >
-                  {error}
-                </motion.div>
-              )}
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-slate-300">Name</Label>
                 <Input
@@ -108,18 +91,6 @@ export default function SignupPage() {
                 <Input
                   id="password"
                   name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  required
-                  minLength={6}
-                  className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-slate-300">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
                   type="password"
                   placeholder="••••••••"
                   required
